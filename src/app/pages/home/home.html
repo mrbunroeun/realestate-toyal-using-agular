@@ -184,13 +184,13 @@
           in Modern Home<br />
           Construction
         </h2>
-        <a
-          routerLink="/"
-          fragment="inclusion-list"
-          class="px-8 py-3 bg-white text-neutral-950 text-[12px] sm:text-[13px] font-medium hover:bg-neutral-100 transition-colors shadow-sm cursor-pointer select-none inline-block rounded-none"
+        <button
+          type="button"
+          (click)="scrollToSection('inclusion-list')"
+          class="px-8 py-3 bg-white text-neutral-950 text-[12px] sm:text-[13px] font-medium hover:bg-neutral-100 transition-colors shadow-sm cursor-pointer select-none inline-block rounded-none border-none"
         >
           Inclusion List
-        </a>
+        </button>
       </div>
     </div>
   </section>
@@ -231,13 +231,13 @@
           in Modern Home<br />
           Construction
         </h3>
-        <a
-          routerLink="/"
-          fragment="inclusion-list"
-          class="px-6 py-2.5 bg-black text-white text-[12px] font-medium hover:bg-neutral-800 transition-colors cursor-pointer select-none rounded-none"
+        <button
+          type="button"
+          (click)="scrollToSection('inclusion-list')"
+          class="px-6 py-2.5 bg-black text-white text-[12px] font-medium hover:bg-neutral-800 transition-colors cursor-pointer select-none rounded-none border-none"
         >
           Inclusion List
-        </a>
+        </button>
       </div>
 
       <!-- Right 2 Images Grid -->
@@ -300,13 +300,13 @@
           in Modern Home<br />
           Construction
         </h3>
-        <a
-          routerLink="/"
-          fragment="inclusion-list"
-          class="px-6 py-2.5 bg-black text-white text-[12px] font-medium hover:bg-neutral-800 transition-colors cursor-pointer select-none rounded-none"
+        <button
+          type="button"
+          (click)="scrollToSection('inclusion-list')"
+          class="px-6 py-2.5 bg-black text-white text-[12px] font-medium hover:bg-neutral-800 transition-colors cursor-pointer select-none rounded-none border-none"
         >
           Inclusion List
-        </a>
+        </button>
       </div>
     </div>
 
@@ -332,13 +332,13 @@
           in Modern Home<br />
           Construction
         </h3>
-        <a
-          routerLink="/"
-          fragment="inclusion-list"
-          class="px-6 py-2.5 bg-black text-white text-[12px] font-medium hover:bg-neutral-800 transition-colors cursor-pointer select-none rounded-none"
+        <button
+          type="button"
+          (click)="scrollToSection('inclusion-list')"
+          class="px-6 py-2.5 bg-black text-white text-[12px] font-medium hover:bg-neutral-800 transition-colors cursor-pointer select-none rounded-none border-none"
         >
           Inclusion List
-        </a>
+        </button>
 
         <!-- Gallery Navigation Scroll Controls -->
         <div class="flex items-center gap-3 mt-6">
@@ -542,13 +542,13 @@
           Modern Home Construction Set New Standards in Modern Home
           Construction
         </h2>
-        <a
-          routerLink="/"
-          fragment="contact"
-          class="px-7 py-2.5 bg-white text-neutral-950 text-[12px] sm:text-[13px] font-medium hover:bg-neutral-100 transition-colors shadow-sm cursor-pointer select-none inline-block rounded-none"
+        <button
+          type="button"
+          (click)="scrollToSection('contact')"
+          class="px-7 py-2.5 bg-white text-neutral-950 text-[12px] sm:text-[13px] font-medium hover:bg-neutral-100 transition-colors shadow-sm cursor-pointer select-none inline-block rounded-none border-none"
         >
           Get In touch
-        </a>
+        </button>
       </div>
     </div>
   </section>
@@ -822,36 +822,40 @@
           class="flex flex-col gap-2.5 text-sm text-neutral-200 font-['Inter',sans-serif]"
         >
           <li>
-            <a routerLink="/" fragment="house-design" class="hover:text-white transition-colors">
+            <button
+              type="button"
+              (click)="scrollToSection('house-design')"
+              class="hover:text-white transition-colors bg-transparent border-none p-0 cursor-pointer text-left text-neutral-200"
+            >
               House Design
-            </a>
+            </button>
           </li>
           <li>
-            <a
-              routerLink="/"
-              fragment="inclusion-list"
-              class="hover:text-white transition-colors"
+            <button
+              type="button"
+              (click)="scrollToSection('inclusion-list')"
+              class="hover:text-white transition-colors bg-transparent border-none p-0 cursor-pointer text-left text-neutral-200"
             >
               Inclusion List
-            </a>
+            </button>
           </li>
           <li>
-            <a
-              routerLink="/"
-              fragment="about"
-              class="hover:text-white transition-colors"
+            <button
+              type="button"
+              (click)="scrollToSection('about')"
+              class="hover:text-white transition-colors bg-transparent border-none p-0 cursor-pointer text-left text-neutral-200"
             >
               About
-            </a>
+            </button>
           </li>
           <li>
-            <a
-              routerLink="/"
-              fragment="contact"
-              class="hover:text-white transition-colors"
+            <button
+              type="button"
+              (click)="scrollToSection('contact')"
+              class="hover:text-white transition-colors bg-transparent border-none p-0 cursor-pointer text-left text-neutral-200"
             >
               Get in touch
-            </a>
+            </button>
           </li>
         </ul>
       </div>

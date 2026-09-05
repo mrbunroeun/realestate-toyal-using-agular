@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -17,7 +17,7 @@ import { RouterLink } from '@angular/router';
         <div class="flex items-center">
           <a
             routerLink="/"
-            (click)="closeMobileMenu()"
+            (click)="scrollToTop($event)"
             class="font-['Bodoni_Moda',serif] italic font-semibold text-[17px] tracking-tight text-black hover:opacity-80 transition-opacity select-none cursor-pointer"
           >
             RealestateToyal
@@ -29,32 +29,32 @@ import { RouterLink } from '@angular/router';
           class="hidden md:flex items-center space-x-8 lg:space-x-12 text-[13px] font-normal text-neutral-800"
         >
           <a
-            routerLink="/"
-            fragment="house-design"
+            href="#house-design"
+            (click)="scrollToSection('house-design', $event)"
             class="hover:text-black transition-colors cursor-pointer"
           >
             House Design
           </a>
 
           <a
-            routerLink="/"
-            fragment="inclusion-list"
+            href="#inclusion-list"
+            (click)="scrollToSection('inclusion-list', $event)"
             class="hover:text-black transition-colors cursor-pointer"
           >
             Inclusion List
           </a>
 
           <a
-            routerLink="/"
-            fragment="about"
+            href="#about"
+            (click)="scrollToSection('about', $event)"
             class="hover:text-black transition-colors cursor-pointer"
           >
             About
           </a>
 
           <a
-            routerLink="/"
-            fragment="contact"
+            href="#contact"
+            (click)="scrollToSection('contact', $event)"
             class="hover:text-black transition-colors cursor-pointer"
           >
             Get in touch
@@ -64,8 +64,8 @@ import { RouterLink } from '@angular/router';
         <!-- Right: Desktop Black Button -->
         <div class="hidden md:flex items-center">
           <a
-            routerLink="/"
-            fragment="contact"
+            href="#contact"
+            (click)="scrollToSection('contact', $event)"
             class="h-[32px] px-5 bg-black text-white text-[12px] font-medium flex items-center justify-center hover:bg-neutral-800 transition-colors whitespace-nowrap cursor-pointer select-none"
           >
             Get in touch
@@ -121,36 +121,32 @@ import { RouterLink } from '@angular/router';
           class="md:hidden absolute top-full left-0 right-0 w-full bg-white border-t border-neutral-100 px-6 py-4 space-y-4 shadow-xl z-50 transition-all duration-200"
         >
           <a
-            routerLink="/"
-            fragment="house-design"
-            (click)="closeMobileMenu()"
+            href="#house-design"
+            (click)="scrollToSection('house-design', $event)"
             class="block text-[14px] text-neutral-800 hover:text-black font-medium transition-colors cursor-pointer py-1"
           >
             House Design
           </a>
 
           <a
-            routerLink="/"
-            fragment="inclusion-list"
-            (click)="closeMobileMenu()"
+            href="#inclusion-list"
+            (click)="scrollToSection('inclusion-list', $event)"
             class="block text-[14px] text-neutral-800 hover:text-black font-medium transition-colors cursor-pointer py-1"
           >
             Inclusion List
           </a>
 
           <a
-            routerLink="/"
-            fragment="about"
-            (click)="closeMobileMenu()"
+            href="#about"
+            (click)="scrollToSection('about', $event)"
             class="block text-[14px] text-neutral-800 hover:text-black font-medium transition-colors cursor-pointer py-1"
           >
             About
           </a>
 
           <a
-            routerLink="/"
-            fragment="contact"
-            (click)="closeMobileMenu()"
+            href="#contact"
+            (click)="scrollToSection('contact', $event)"
             class="block text-[14px] text-neutral-800 hover:text-black font-medium transition-colors cursor-pointer py-1"
           >
             Get in touch
@@ -159,9 +155,8 @@ import { RouterLink } from '@angular/router';
           <!-- Mobile Get In Touch Button -->
           <div class="pt-2">
             <a
-              routerLink="/"
-              fragment="contact"
-              (click)="closeMobileMenu()"
+              href="#contact"
+              (click)="scrollToSection('contact', $event)"
               class="w-full h-[36px] bg-black text-white text-[13px] font-medium flex items-center justify-center hover:bg-neutral-800 transition-colors cursor-pointer select-none"
             >
               Get in touch
@@ -175,11 +170,36 @@ import { RouterLink } from '@angular/router';
 export class NavbarComponent {
   readonly isMobileMenuOpen = signal(false);
 
+  constructor(private router: Router) {}
+
   toggleMobileMenu(): void {
     this.isMobileMenuOpen.update(open => !open);
   }
 
   closeMobileMenu(): void {
     this.isMobileMenuOpen.set(false);
+  }
+
+  scrollToTop(event?: Event): void {
+    this.closeMobileMenu();
+    if (typeof window !== 'undefined') {
+      if (event) event.preventDefault();
+      history.replaceState(null, '', '/');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  scrollToSection(id: string, event?: Event): void {
+    this.closeMobileMenu();
+    if (typeof document !== 'undefined') {
+      if (event) event.preventDefault();
+      const el = document.getElementById(id);
+      if (el) {
+        history.replaceState(null, '', `/#${id}`);
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        this.router.navigate(['/'], { fragment: id });
+      }
+    }
   }
 }
