@@ -1,0 +1,95 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease forwards;
+}
+
+/* Hardware-Accelerated Smooth CSS Motion */
+.anim-slide-left {
+  opacity: 0;
+  transform: translate3d(-60px, 0, 0);
+  transition:
+    opacity 3.2s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 3.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.anim-slide-right {
+  opacity: 0;
+  transform: translate3d(60px, 0, 0);
+  transition:
+    opacity 3.2s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 3.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.anim-hero-building {
+  opacity: 0;
+  transform: translate3d(90px, 0, 0) scale(0.65);
+  transform-origin: bottom right;
+  transition:
+    opacity 4.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 4.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.anim-house-scale-left {
+  opacity: 0;
+  transform: translate3d(-50px, 0, 0) scale(0.7);
+  transform-origin: center;
+  transition:
+    opacity 3.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 3.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.anim-house-scale-right {
+  opacity: 0;
+  transform: translate3d(50px, 0, 0) scale(0.7);
+  transform-origin: center;
+  transition:
+    opacity 3.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 3.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.anim-banner-bg {
+  opacity: 0;
+  transform: translate3d(200px, 0, 0) scale(1.06);
+  transition:
+    opacity 3.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 3.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.anim-fade-overlay {
+  opacity: 0;
+  transition: opacity 3s ease;
+}
+
+/* Stagger Delays for Slower, Distinct Sequential Entrance */
+.delay-100 {
+  transition-delay: 0.35s !important;
+}
+.delay-200 {
+  transition-delay: 0.7s !important;
+}
+.delay-300 {
+  transition-delay: 1.05s !important;
+}
+.delay-400 {
+  transition-delay: 1.4s !important;
+}
+
+/* Active State Trigger */
+.anim-active {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) scale(1) !important;
+}
