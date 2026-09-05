@@ -1,6 +1,37 @@
-<div class="min-h-screen bg-white text-neutral-900 flex flex-col selection:bg-neutral-900 selection:text-white">
+<div class="min-h-screen w-full bg-white text-black relative flex flex-col selection:bg-neutral-900 selection:text-white">
+  <!-- Navbar Component -->
   <app-navbar></app-navbar>
-  <main class="flex-grow">
+
+  <!-- The active page will display here -->
+  <main class="w-full flex-grow">
     <router-outlet></router-outlet>
   </main>
+
+  <!-- Floating Scroll To Top Button (Bottom Right) -->
+  <button
+    type="button"
+    (click)="scrollToTop()"
+    aria-label="Scroll to top"
+    [class]="
+      'fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-40 w-11 h-11 sm:w-12 sm:h-12 bg-black text-white hover:bg-neutral-800 active:scale-95 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-white/20 select-none group ' +
+      (showScrollTop()
+        ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto'
+        : 'opacity-0 translate-y-4 scale-90 pointer-events-none')
+    "
+  >
+    <!-- Arrow Up Icon -->
+    <svg
+      class="w-5 h-5 text-white transition-transform duration-300 group-hover:-translate-y-0.5"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.2"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M5 10l7-7m0 0l7 7m-7-7v18"
+      />
+    </svg>
+  </button>
 </div>

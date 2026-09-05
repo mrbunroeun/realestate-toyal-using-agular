@@ -1,15 +1,14 @@
 import {
   Component,
   ElementRef,
-  Inject,
   OnDestroy,
   OnInit,
-  PLATFORM_ID,
+  afterNextRender,
   computed,
   signal,
   viewChild
 } from '@angular/core';
-import { isPlatformBrowser, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -87,7 +86,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   newsletterEmail = '';
   readonly isSubmitting = signal(false);
 
-  // Section animation visibility states
+  // Section animation visibility states - initialized to false so CSS transition fires
   readonly isHeroVisible = signal(false);
   readonly isHouse1Visible = signal(false);
   readonly isHouse2Visible = signal(false);
@@ -118,34 +117,23 @@ export class HomeComponent implements OnInit, OnDestroy {
   private observers: IntersectionObserver[] = [];
   private keydownHandler?: (e: KeyboardEvent) => void;
 
-  constructor(
-    @Inject(PLATFORM_ID) private platformId: Object,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private route: ActivatedRoute) {
+    // afterNextRender runs only in the browser once the DOM is fully rendered
+    afterNextRender(() => {
+      this.initBrowserFeatures();
+    });
+  }
 
   ngOnInit(): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      // Set all true on SSR
-      this.setAllVisible();
-      return;
-    }
-
-    this.keydownHandler = (e: KeyboardEvent) => this.handleKeyDown(e);
-    window.addEventListener('keydown', this.keydownHandler);
-
     this.route.fragment.subscribe(fragment => {
       if (fragment) {
         setTimeout(() => this.scrollToSection(fragment), 100);
       }
     });
-
-    setTimeout(() => {
-      this.initIntersectionObservers();
-    }, 50);
   }
 
   ngOnDestroy(): void {
-    if (isPlatformBrowser(this.platformId)) {
+    if (typeof window !== 'undefined') {
       if (this.keydownHandler) {
         window.removeEventListener('keydown', this.keydownHandler);
       }
@@ -155,8 +143,63 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  private initBrowserFeatures(): void {
+    this.keydownHandler = (e: KeyboardEvent) => this.handleKeyDown(e);
+    window.addEventListener('keydown', this.keydownHandler);
+
+    if (typeof IntersectionObserver === 'undefined') {
+      this.setAllVisible();
+      return;
+    }
+
+    // 1. Hero Observer (0.1 threshold)
+    const heroEl = this.heroSectionRef()?.nativeElement;
+    if (heroEl) {
+      const heroObserver = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            this.isHeroVisible.set(true);
+          }
+        },
+        { threshold: 0.1 }
+      );
+      heroObserver.observe(heroEl);
+      this.observers.push(heroObserver);
+    } else {
+      // Fallback if ref wasn't caught
+      setTimeout(() => this.isHeroVisible.set(true), 50);
+    }
+
+    // 2. Section 2 & others Observer (0.15 threshold)
+    const observeElement = (el: HTMLElement | undefined, setVisible: () => void) => {
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setVisible();
+          }
+        },
+        { threshold: 0.15 }
+      );
+      obs.observe(el);
+      this.observers.push(obs);
+    };
+
+    observeElement(this.house1Ref()?.nativeElement, () => this.isHouse1Visible.set(true));
+    observeElement(this.house2Ref()?.nativeElement, () => this.isHouse2Visible.set(true));
+    observeElement(this.house3Ref()?.nativeElement, () => this.isHouse3Visible.set(true));
+    observeElement(this.section3Ref()?.nativeElement, () => this.isSection3Visible.set(true));
+    observeElement(this.inc1Ref()?.nativeElement, () => this.isInc1Visible.set(true));
+    observeElement(this.inc2Ref()?.nativeElement, () => this.isInc2Visible.set(true));
+    observeElement(this.inc3Ref()?.nativeElement, () => this.isInc3Visible.set(true));
+    observeElement(this.aboutRef()?.nativeElement, () => this.isAboutVisible.set(true));
+    observeElement(this.section6Ref()?.nativeElement, () => this.isSection6Visible.set(true));
+    observeElement(this.contactRef()?.nativeElement, () => this.isContactVisible.set(true));
+    observeElement(this.footerRef()?.nativeElement, () => this.isFooterVisible.set(true));
+  }
+
   scrollToSection(id: string): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+    if (typeof document === 'undefined') return;
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -164,7 +207,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   scrollToTop(): void {
-    if (isPlatformBrowser(this.platformId)) {
+    if (typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
@@ -205,14 +248,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   openPopup(index: number): void {
     this.selectedImageIndex.set(index);
-    if (isPlatformBrowser(this.platformId)) {
+    if (typeof document !== 'undefined') {
       document.body.style.overflow = 'hidden';
     }
   }
 
   closePopup(): void {
     this.selectedImageIndex.set(null);
-    if (isPlatformBrowser(this.platformId)) {
+    if (typeof document !== 'undefined') {
       document.body.style.overflow = '';
     }
   }
@@ -259,7 +302,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     const message = lines.join('\n');
     const telegramUrl = `https://t.me/HasBunRoeun?text=${encodeURIComponent(message)}`;
-    if (isPlatformBrowser(this.platformId)) {
+    if (typeof window !== 'undefined') {
       window.open(telegramUrl, '_blank');
     }
   }
@@ -271,7 +314,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const body = encodeURIComponent(
       `Hi Bunroeun,\n\nI would like to subscribe to the RealestateToyal newsletter with the following email address:\n\nSubscriber Email: ${email}`
     );
-    if (isPlatformBrowser(this.platformId)) {
+    if (typeof window !== 'undefined') {
       window.location.href = `mailto:bunroeunhas@gmail.com?subject=${subject}&body=${body}`;
     }
   }
@@ -289,39 +332,5 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.isSection6Visible.set(true);
     this.isContactVisible.set(true);
     this.isFooterVisible.set(true);
-  }
-
-  private initIntersectionObservers(): void {
-    if (typeof IntersectionObserver === 'undefined') {
-      this.setAllVisible();
-      return;
-    }
-
-    const observe = (el: ElementRef<HTMLElement> | undefined, trigger: () => void) => {
-      if (!el?.nativeElement) return;
-      const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            trigger();
-          }
-        },
-        { threshold: 0.12 }
-      );
-      obs.observe(el.nativeElement);
-      this.observers.push(obs);
-    };
-
-    observe(this.heroSectionRef(), () => this.isHeroVisible.set(true));
-    observe(this.house1Ref(), () => this.isHouse1Visible.set(true));
-    observe(this.house2Ref(), () => this.isHouse2Visible.set(true));
-    observe(this.house3Ref(), () => this.isHouse3Visible.set(true));
-    observe(this.section3Ref(), () => this.isSection3Visible.set(true));
-    observe(this.inc1Ref(), () => this.isInc1Visible.set(true));
-    observe(this.inc2Ref(), () => this.isInc2Visible.set(true));
-    observe(this.inc3Ref(), () => this.isInc3Visible.set(true));
-    observe(this.aboutRef(), () => this.isAboutVisible.set(true));
-    observe(this.section6Ref(), () => this.isSection6Visible.set(true));
-    observe(this.contactRef(), () => this.isContactVisible.set(true));
-    observe(this.footerRef(), () => this.isFooterVisible.set(true));
   }
 }
